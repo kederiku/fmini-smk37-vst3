@@ -1,9 +1,11 @@
 # FMini SMK-37 VST3
 
-[![Compilation et tests Windows](https://github.com/kederiku/fmini-smk37-vst3/actions/workflows/ci.yml/badge.svg)](https://github.com/kederiku/fmini-smk37-vst3/actions/workflows/ci.yml)
+[![Compilation et publication](https://github.com/kederiku/fmini-smk37-vst3/actions/workflows/release.yml/badge.svg)](https://github.com/kederiku/fmini-smk37-vst3/actions/workflows/release.yml)
 [![Licence : GPL-3.0-only](https://img.shields.io/badge/licence-GPL--3.0--only-blue)](LICENSE)
 
 **[English](README.md) | Français**
+
+**[Télécharger le VST3 compilé pour Windows x64](https://github.com/kederiku/fmini-smk37-vst3/releases/latest/download/FMini-SMK-37-Windows-x64.zip)** · [Toutes les releases](https://github.com/kederiku/fmini-smk37-vst3/releases)
 
 Un instrument VST3 Windows x64 basé sur [l'émulateur SMK-37 de FMini-1](https://ruppert.github.io/fmini-1/emu/smk/). Il exécute le firmware d'origine en natif et reproduit le panneau du SMK-37, avec son écran LCD. Aucun navigateur ni accès Internet n'est nécessaire pour jouer.
 
@@ -20,7 +22,7 @@ Il s'agit d'un portage communautaire indépendant, sans affiliation officielle a
 
 ## Installation
 
-1. Télécharger le ZIP Windows x64 depuis [Releases](https://github.com/kederiku/fmini-smk37-vst3/releases) et l'extraire. S'il n'y a pas encore de release, récupérer les fichiers d'une exécution réussie de [Windows build and test](https://github.com/kederiku/fmini-smk37-vst3/actions/workflows/ci.yml), ou [compiler les sources](docs/fr/compilation.md).
+1. [Télécharger le ZIP Windows x64](https://github.com/kederiku/fmini-smk37-vst3/releases/latest/download/FMini-SMK-37-Windows-x64.zip) et l'extraire. Aucune compilation ni compte GitHub n'est nécessaire. Chaque mise à jour de `main` publie automatiquement une nouvelle release après réussite de tous les tests.
 2. Copier le dossier complet `VST3/FMini SMK-37.vst3` dans un dossier VST3 reconnu par l'hôte, généralement `C:\Program Files\Common Files\VST3`.
 3. Relancer la recherche de plugins puis charger **FMini SMK-37** comme instrument.
 

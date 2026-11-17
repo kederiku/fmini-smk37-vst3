@@ -1,44 +1,45 @@
-name: Draft release
+name: Build and publish release
 
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/ci.yml
     permissions:
       contents: read
-  draft:
+  publish:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
+    # Keep every merge in the queue and serialize changes to the Latest pointer.
+    concurrency:
+      group: publish-release-main
+      cancel-in-progress: false
+      queue: max
     steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+          package-manager-cache: false
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: windows-x64
           path: release-assets
-      - name: Create or update draft with tested binaries and sources
+      - name: Publish tested binaries and corresponding sources
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ needs.build.outputs.version }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if gh release view "$RELEASE_TAG" --json isDraft > release.json 2>/dev/null; then
-            python3 -c 'import json; assert json.load(open("release.json"))["isDraft"], "Refusing to replace a published release"'
-          else
-            gh release create "$RELEASE_TAG" --verify-tag --draft --title "FMini SMK-37 $RELEASE_VERSION" --generate-notes
-          fi
-          gh release upload "$RELEASE_TAG" release-assets/* --clobber
+        run: node scripts/publish-release.mjs release-assets

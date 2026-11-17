@@ -1,5 +1,12 @@
 # Changelog / Historique
 
+## Automatic releases / Releases automatiques — 2026-11-17
+
+- Publish tested Windows binaries, complete sources and SHA256 checksums automatically after each merge/push to `main`.
+- Unique build tags, safe retries, queued publication and a permanent download link in both READMEs.
+- Publication automatique des binaires Windows testés, sources complètes et empreintes SHA256 après chaque merge/push sur `main`.
+- Tags de build uniques, reprise après échec, publication en file d'attente et lien de téléchargement permanent dans les deux README.
+
 ## 0.1.0 — 2026-11-17
 
 ### English
