@@ -1,0 +1,78 @@
+name: Windows build and test
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    outputs:
+      version:
+        description: Version read from VERSION
+        value: ${{ jobs.windows.outputs.version }}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Validate version and release tag
+        id: version
+        run: |
+          $version = (Get-Content VERSION -Raw).Trim()
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid VERSION' }
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") { throw 'Tag must match VERSION' }
+          "version=$version" >> $env:GITHUB_OUTPUT
+      - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: tools/downloads
+          key: windows-dependencies-${{ hashFiles('third_party/downloads.sha256.json') }}
+      - name: Prepare pinned dependencies
+        run: ./scripts/setup.ps1
+      - name: Check documentation links
+        run: node tests/docs_test.mjs
+      - name: Build and run all native tests
+        run: |
+          & ./scripts/build.ps1 *> build/ci.log
+          Get-Content build/ci.log
+      - name: Package public release and corresponding sources
+        run: |
+          ./tests/package_guards.ps1
+          ./scripts/package.ps1
+          ./scripts/verify-package.ps1
+      - name: Upload release archives
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: windows-x64
+          path: |
+            dist/FMini-SMK-37-*-Windows-x64.zip
+            dist/FMini-SMK-37-*-sources.zip
+            dist/FMini-SMK-37-*-SHA256SUMS.txt
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload test log
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: native-test-log
+          path: build/ci.log
+          if-no-files-found: ignore

@@ -1,0 +1,12 @@
+tools/
+build/
+dist/
+third_party/fmini-1-*/
+third_party/vst3_pluginterfaces-*/
+third_party/Felucca-Engines-*/
+docs/superpowers/
+docs/build-verification.log
+.superpowers/
+.vs/
+*.user
+*.suo

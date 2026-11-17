@@ -1,0 +1,42 @@
+name: Bug report / Signaler un bug
+description: Report a reproducible problem / Décrire un problème reproductible.
+title: '[Bug] '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English and French are welcome. Do not attach private projects or credentials.
+        Français et anglais acceptés. Ne pas joindre de projets privés ni d'identifiants.
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version / Version du plugin
+      placeholder: '0.1.0'
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / Environnement
+      description: Windows version, host and version, sample rate, buffer size, MIDI device if relevant.
+      placeholder: 'Windows 11, SAVIHost VST3 x64 1.43, 48000 Hz, 256 samples...'
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce / Étapes de reproduction
+      description: Include the starting preset and the exact controls/events used.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual result / Résultat attendu et obtenu
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional information / Informations complémentaires
+      description: Relevant screenshots or a minimal shareable preset are helpful.

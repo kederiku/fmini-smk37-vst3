@@ -1,0 +1,21 @@
+name: Feature request / Proposer une amélioration
+description: Explain a musical or workflow need / Décrire un besoin musical ou pratique.
+title: '[Feature] '
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Need / Besoin
+      description: What are you trying to do? / Que souhaitez-vous faire ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested behavior / Fonctionnement souhaité
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and context / Alternatives et contexte
